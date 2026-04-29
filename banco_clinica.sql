@@ -1,6 +1,7 @@
-use clinica;
+CREATE DATABASE IF NOT EXISTS clinica;
+USE clinica;
 
-CREATE TABLE Login (
+CREATE TABLE `Login` (
     id_login INT PRIMARY KEY AUTO_INCREMENT,
     login_usuario VARCHAR(50) NOT NULL,
     senha_usuario VARCHAR(50) NOT NULL
@@ -11,11 +12,11 @@ CREATE TABLE Paciente (
     id_login INT,
     nome_paciente VARCHAR(50) NOT NULL,
     idade INT,
-    cpf VARCHAR(11) UNIQUE,
-    contato_paciente VARCHAR(16),
+    cpf VARCHAR(14) UNIQUE,              -- ajustado para caber pontos e traço
+    contato_paciente VARCHAR(20),        -- mais espaço para telefone com DDD
     descricao_paciente TEXT,
     relatorio_consulta TEXT,
-    FOREIGN KEY (id_login) REFERENCES Login(id_login)
+    FOREIGN KEY (id_login) REFERENCES `Login`(id_login)
 );
 
 CREATE TABLE Acompanhante (
@@ -24,9 +25,9 @@ CREATE TABLE Acompanhante (
     id_login INT,
     nome_acompanhante VARCHAR(50),
     idade INT,
-    contato_acompanhante VARCHAR(16),
+    contato_acompanhante VARCHAR(20),
     FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),
-    FOREIGN KEY (id_login) REFERENCES Login(id_login)
+    FOREIGN KEY (id_login) REFERENCES `Login`(id_login)
 );
 
 CREATE TABLE Estagiario (
@@ -34,15 +35,15 @@ CREATE TABLE Estagiario (
     id_login INT,
     nome_estagiario VARCHAR(50),
     tempo_estagio VARCHAR(20),
-    ativo BOOLEAN,
-    FOREIGN KEY (id_login) REFERENCES Login(id_login)
+    ativo TINYINT(1),                     -- BOOLEAN em MySQL é TINYINT(1)
+    FOREIGN KEY (id_login) REFERENCES `Login`(id_login)
 );
 
 CREATE TABLE Professor (
     id_professor INT PRIMARY KEY AUTO_INCREMENT,
     id_login INT,
     nome_professor VARCHAR(50),
-    FOREIGN KEY (id_login) REFERENCES Login(id_login)
+    FOREIGN KEY (id_login) REFERENCES `Login`(id_login)
 );
 
 CREATE TABLE Local (
@@ -76,13 +77,13 @@ CREATE TABLE Agendamento (
     FOREIGN KEY (id_local) REFERENCES Local(id_local)
 );
 
-CREATE TABLE To_do (
+CREATE TABLE Todo (                        -- renomeado para evitar problemas
     id_todo INT PRIMARY KEY AUTO_INCREMENT,
     id_paciente INT,
     id_consulta INT,
     descricao TEXT,
     data_conclusao DATE,
-    concluido BOOLEAN,
+    concluido TINYINT(1),
     FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),
     FOREIGN KEY (id_consulta) REFERENCES Consulta(id_consulta)
 );
